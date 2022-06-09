@@ -23,12 +23,13 @@ import (
 	tjconfig "github.com/crossplane/terrajet/pkg/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"github.com/crossplane-contrib/provider-jet-template/config/null"
+	"github.com/crossplane-contrib/provider-jet-vsphere/config/datacenter"
+	"github.com/crossplane-contrib/provider-jet-vsphere/config/folder"
 )
 
 const (
-	resourcePrefix = "template"
-	modulePath     = "github.com/crossplane-contrib/provider-jet-template"
+	resourcePrefix = "vsphere"
+	modulePath     = "github.com/crossplane-contrib/provider-jet-vsphere"
 )
 
 //go:embed schema.json
@@ -40,15 +41,22 @@ func GetProvider() *tjconfig.Provider {
 		r := tjconfig.DefaultResource(name, terraformResource)
 		// Add any provider-specific defaulting here. For example:
 		//   r.ExternalName = tjconfig.IdentifierFromProvider
+		r.ExternalName = tjconfig.IdentifierFromProvider
+
 		return r
 	}
 
 	pc := tjconfig.NewProviderWithSchema([]byte(providerSchema), resourcePrefix, modulePath,
-		tjconfig.WithDefaultResourceFn(defaultResourceFn))
+		tjconfig.WithDefaultResourceFn(defaultResourceFn),
+		tjconfig.WithIncludeList([]string{
+			"vsphere_datacenter$",
+			"vsphere_folder$",
+		}))
 
 	for _, configure := range []func(provider *tjconfig.Provider){
 		// add custom config functions
-		null.Configure,
+		folder.Configure,
+		datacenter.Configure,
 	} {
 		configure(pc)
 	}

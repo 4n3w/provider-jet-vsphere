@@ -25,62 +25,74 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
-type ResourceObservation struct {
+type DatacenterObservation struct {
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
+
+	Moid *string `json:"moid,omitempty" tf:"moid,omitempty"`
 }
 
-type ResourceParameters struct {
+type DatacenterParameters struct {
 
-	// A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.
+	// A list of custom attributes to set on this resource.
 	// +kubebuilder:validation:Optional
-	Triggers map[string]*string `json:"triggers,omitempty" tf:"triggers,omitempty"`
+	CustomAttributes map[string]*string `json:"customAttributes,omitempty" tf:"custom_attributes,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	Folder *string `json:"folder,omitempty" tf:"folder,omitempty"`
+
+	// +kubebuilder:validation:Required
+	Name *string `json:"name" tf:"name,omitempty"`
+
+	// A list of tag IDs to apply to this object.
+	// +kubebuilder:validation:Optional
+	Tags []*string `json:"tags,omitempty" tf:"tags,omitempty"`
 }
 
-// ResourceSpec defines the desired state of Resource
-type ResourceSpec struct {
+// DatacenterSpec defines the desired state of Datacenter
+type DatacenterSpec struct {
 	v1.ResourceSpec `json:",inline"`
-	ForProvider     ResourceParameters `json:"forProvider"`
+	ForProvider     DatacenterParameters `json:"forProvider"`
 }
 
-// ResourceStatus defines the observed state of Resource.
-type ResourceStatus struct {
+// DatacenterStatus defines the observed state of Datacenter.
+type DatacenterStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        ResourceObservation `json:"atProvider,omitempty"`
+	AtProvider        DatacenterObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// Resource is the Schema for the Resources API
+// Datacenter is the Schema for the Datacenters API
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,templatejet}
-type Resource struct {
+// +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,vspherejet}
+type Datacenter struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              ResourceSpec   `json:"spec"`
-	Status            ResourceStatus `json:"status,omitempty"`
+	Spec              DatacenterSpec   `json:"spec"`
+	Status            DatacenterStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// ResourceList contains a list of Resources
-type ResourceList struct {
+// DatacenterList contains a list of Datacenters
+type DatacenterList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Resource `json:"items"`
+	Items           []Datacenter `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	Resource_Kind             = "Resource"
-	Resource_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: Resource_Kind}.String()
-	Resource_KindAPIVersion   = Resource_Kind + "." + CRDGroupVersion.String()
-	Resource_GroupVersionKind = CRDGroupVersion.WithKind(Resource_Kind)
+	Datacenter_Kind             = "Datacenter"
+	Datacenter_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: Datacenter_Kind}.String()
+	Datacenter_KindAPIVersion   = Datacenter_Kind + "." + CRDGroupVersion.String()
+	Datacenter_GroupVersionKind = CRDGroupVersion.WithKind(Datacenter_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&Resource{}, &ResourceList{})
+	SchemeBuilder.Register(&Datacenter{}, &DatacenterList{})
 }

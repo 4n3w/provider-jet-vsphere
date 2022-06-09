@@ -1,16 +1,16 @@
 # ====================================================================================
 # Setup Project
 
-PROJECT_NAME := provider-jet-template
+PROJECT_NAME := provider-jet-vsphere
 PROJECT_REPO := github.com/crossplane-contrib/$(PROJECT_NAME)
 
 export TERRAFORM_VERSION := 1.1.6
 
-export TERRAFORM_PROVIDER_SOURCE := hashicorp/null
-export TERRAFORM_PROVIDER_VERSION := 3.1.0
-export TERRAFORM_PROVIDER_DOWNLOAD_NAME := terraform-provider-null
-export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX := https://releases.hashicorp.com/terraform-provider-null/3.1.0
-export TERRAFORM_NATIVE_PROVIDER_BINARY := terraform-provider-null_v3.1.0_x5
+export TERRAFORM_PROVIDER_SOURCE := hashicorp/vsphere
+export TERRAFORM_PROVIDER_VERSION := 2.1.1
+export TERRAFORM_PROVIDER_DOWNLOAD_NAME := terraform-provider-vsphere
+export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX := https://releases.hashicorp.com/terraform-provider-vsphere/2.1.1
+export TERRAFORM_NATIVE_PROVIDER_BINARY := terraform-provider-vsphere_2.1.1_darwin_arm64.zip
 
 PLATFORMS ?= linux_amd64 linux_arm64
 
@@ -52,7 +52,7 @@ GO111MODULE = on
 # Setup Images
 
 DOCKER_REGISTRY ?= crossplane
-IMAGES = provider-jet-template provider-jet-template-controller
+IMAGES = provider-jet-vsphere provider-jet-vsphere-controller
 -include build/makelib/image.mk
 
 # ====================================================================================

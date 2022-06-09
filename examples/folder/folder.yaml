@@ -1,0 +1,10 @@
+apiVersion: folder.vsphere.jet.crossplane.io/v1alpha1
+kind: Folder
+metadata:
+  name: hello-crossplane
+spec:
+  forProvider:
+    type: datacenter
+    path: "0000-crossplane-folder"
+  providerConfigRef:
+    name: default

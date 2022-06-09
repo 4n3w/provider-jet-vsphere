@@ -5,18 +5,18 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
-  name: resources.null.template.jet.crossplane.io
+  name: folders.folder.vsphere.jet.crossplane.io
 spec:
-  group: null.template.jet.crossplane.io
+  group: folder.vsphere.jet.crossplane.io
   names:
     categories:
     - crossplane
     - managed
-    - templatejet
-    kind: Resource
-    listKind: ResourceList
-    plural: resources
-    singular: resource
+    - vspherejet
+    kind: Folder
+    listKind: FolderList
+    plural: folders
+    singular: folder
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -35,7 +35,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Resource is the Schema for the Resources API
+        description: Folder is the Schema for the Folders API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -50,7 +50,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ResourceSpec defines the desired state of Resource
+            description: FolderSpec defines the desired state of Folder
             properties:
               deletionPolicy:
                 default: Delete
@@ -63,13 +63,30 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  triggers:
+                  customAttributes:
                     additionalProperties:
                       type: string
-                    description: A map of arbitrary strings that, when changed, will
-                      force the null resource to be replaced, re-running any associated
-                      provisioners.
+                    description: A list of custom attributes to set on this resource.
                     type: object
+                  datacenterId:
+                    description: The ID of the datacenter. Can be ignored if creating
+                      a datacenter folder, otherwise required.
+                    type: string
+                  path:
+                    description: The path of the folder and any parents, relative
+                      to the datacenter and folder type being defined.
+                    type: string
+                  tags:
+                    description: A list of tag IDs to apply to this object.
+                    items:
+                      type: string
+                    type: array
+                  type:
+                    description: The type of the folder.
+                    type: string
+                required:
+                - path
+                - type
                 type: object
               providerConfigRef:
                 default:
@@ -168,7 +185,7 @@ spec:
             - forProvider
             type: object
           status:
-            description: ResourceStatus defines the observed state of Resource.
+            description: FolderStatus defines the observed state of Folder.
             properties:
               atProvider:
                 properties:

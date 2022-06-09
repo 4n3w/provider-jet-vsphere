@@ -1,0 +1,9 @@
+apiVersion: datacenter.vsphere.jet.crossplane.io/v1alpha1
+kind: Datacenter
+metadata:
+  name: datacenter
+spec:
+  forProvider:
+    name: Datacenter2
+  providerConfigRef:
+    name: default
